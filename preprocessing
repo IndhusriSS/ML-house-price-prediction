@@ -1,0 +1,322 @@
+import pickle
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OrdinalEncoder
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
+
+from sklearn.metrics import mean_squared_error
+from sklearn import metrics
+dataframe =  pd.read_csv('C:/Users/Indhu/OneDrive/Documents/Housing.csv')
+
+
+# printing first 5 columns
+print(dataframe.head())
+
+# printing the dimensions of the dataframe
+print(dataframe.shape)
+
+# Checking for missing values
+print(dataframe.isnull().sum())
+
+#data info
+print(dataframe.info())
+label_encoder = LabelEncoder()
+ordinal_encoder = OrdinalEncoder(categories=[['unfurnished','semi-furnished','furnished']])
+dataframe['mainroad'] = label_encoder.fit_transform(dataframe['mainroad'])
+dataframe['guestroom'] = label_encoder.fit_transform(dataframe['guestroom'])
+dataframe['basement'] = label_encoder.fit_transform(dataframe['basement'])
+dataframe['hotwaterheating'] = label_encoder.fit_transform(dataframe['hotwaterheating'])
+dataframe['airconditioning'] = label_encoder.fit_transform(dataframe['airconditioning'])
+dataframe['prefarea'] = label_encoder.fit_transform(dataframe['prefarea'])
+dataframe['furnishingstatus'] = ordinal_encoder.fit_transform(dataframe[['furnishingstatus']])
+plt.figure(figsize=(10,6))
+sns.heatmap(dataframe.corr(), annot=True, cmap='coolwarm')
+X = dataframe.drop(['price'],axis=1)
+Y = dataframe["price"]
+train_x, test_x, train_y, test_y = train_test_split(X,Y,test_size=0.2,random_state=0)
+scalar = StandardScaler()
+scalar.fit(train_x)
+train_x = scalar.transform(train_x)
+test_x = scalar.transform(test_x)
+
+
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import metrics
+import numpy as np
+
+# Assuming train_x and train_y are your features and target variables for training the model
+
+# Model 1: Random Forest Regressor
+model1 = RandomForestRegressor(n_estimators=100, random_state=42)
+model1.fit(train_x, train_y)
+
+# Predictions for Model 1
+predict_y_model1 = model1.predict(train_x)
+
+# Evaluation Metrics for Random Forest Regressor
+print("Evaluation Metrics for Model 1 (Random Forest Regressor):\n")
+
+# R squared error
+score_model1_1 = metrics.r2_score(train_y, predict_y_model1)
+print(f"R squared error: {score_model1_1}")
+
+# Mean Absolute Error
+score_model1_2 = metrics.mean_absolute_error(train_y, predict_y_model1)
+print(f"Mean Absolute Error (MAE): {score_model1_2}")
+
+# Mean Squared Error (MSE)
+mse_model1 = metrics.mean_squared_error(train_y, predict_y_model1)
+print(f"Mean Squared Error (MSE): {mse_model1}")
+
+# Root Mean Squared Error (RMSE)
+rmse_model1 = np.sqrt(mse_model1)
+print(f"Root Mean Squared Error (RMSE): {rmse_model1}")
+
+# Mean Absolute Percentage Error (MAPE)
+mape_model1 = metrics.mean_absolute_percentage_error(train_y, predict_y_model1)
+print(f"Mean Absolute Percentage Error (MAPE): {mape_model1}")
+
+# Explained Variance Score (EVS)
+evs_model1 = metrics.explained_variance_score(train_y, predict_y_model1)
+print(f"Explained Variance Score (EVS): {evs_model1}")
+
+
+# Model 1: XGBoost Regressor
+model1 = XGBRegressor()
+model1.fit(train_x, train_y)
+
+# Predictions for Model 1
+predict_y_model1 = model1.predict(train_x)
+
+# Evaluation Metrics for Model 1
+print("Evaluation Metrics for Model 1 (XGBoost Regressor):\n")
+
+# R squared error
+score_model1_1 = metrics.r2_score(train_y, predict_y_model1)
+print(f"R squared error: {score_model1_1}")
+
+# Mean Absolute Error
+score_model1_2 = metrics.mean_absolute_error(train_y, predict_y_model1)
+print(f"Mean Absolute Error (MAE): {score_model1_2}")
+
+# Additional Metrics
+print(f"Mean Squared Error (MSE): {mean_squared_error(train_y, predict_y_model1)}")
+print(f"Root Mean Squared Error (RMSE): {np.sqrt(mean_squared_error(train_y, predict_y_model1))}")
+print(f"Mean Absolute Percentage Error (MAPE): {mean_absolute_percentage_error(train_y, predict_y_model1)}")
+print(f"Explained Variance Score (EVS): {explained_variance_score(train_y, predict_y_model1)}")
+print(f"R-squared (R2): {r2_score(train_y, predict_y_model1)}")
+
+
+from sklearn.linear_model import LinearRegression
+from sklearn import metrics
+import numpy as np
+
+# Model 4: Linear Regression
+model4 = LinearRegression()
+model4.fit(train_x, train_y)
+
+# Predictions for Model 4
+predict_y_model4 = model4.predict(train_x)
+
+# Evaluation Metrics for Linear Regression
+print("Evaluation Metrics for Model 4 (Linear Regression):\n")
+
+# R squared error
+score_model4_1 = metrics.r2_score(train_y, predict_y_model4)
+print(f"R squared error: {score_model4_1}")
+
+# Mean Absolute Error
+score_model4_2 = metrics.mean_absolute_error(train_y, predict_y_model4)
+print(f"Mean Absolute Error (MAE): {score_model4_2}")
+
+# Additional Metrics
+print(f"Mean Squared Error (MSE): {metrics.mean_squared_error(train_y, predict_y_model4)}")
+print(f"Root Mean Squared Error (RMSE): {np.sqrt(metrics.mean_squared_error(train_y, predict_y_model4))}")
+print(f"Mean Absolute Percentage Error (MAPE): {metrics.mean_absolute_percentage_error(train_y, predict_y_model4)}")
+print(f"Explained Variance Score (EVS): {metrics.explained_variance_score(train_y, predict_y_model4)}")
+
+from sklearn.tree import DecisionTreeRegressor
+from sklearn import metrics
+import numpy as np
+
+# Model 5: Decision Tree Regressor
+model5 = DecisionTreeRegressor(random_state=8)
+model5.fit(train_x, train_y)
+
+# Predictions for Model 5
+predict_y_model5 = model5.predict(train_x)
+
+# Evaluation Metrics for Decision Tree Regressor
+print("Evaluation Metrics for Model 5 (Decision Tree Regressor):\n")
+
+# R squared error
+score_model5_1 = metrics.r2_score(train_y, predict_y_model5)
+print(f"R squared error: {score_model5_1}")
+
+# Mean Absolute Error
+score_model5_2 = metrics.mean_absolute_error(train_y, predict_y_model5)
+print(f"Mean Absolute Error (MAE): {score_model5_2}")
+
+# Additional Metrics
+print(f"Mean Squared Error (MSE): {metrics.mean_squared_error(train_y, predict_y_model5)}")
+print(f"Root Mean Squared Error (RMSE): {np.sqrt(metrics.mean_squared_error(train_y, predict_y_model5))}")
+print(f"Mean Absolute Percentage Error (MAPE): {metrics.mean_absolute_percentage_error(train_y, predict_y_model5)}")
+print(f"Explained Variance Score (EVS): {metrics.explained_variance_score(train_y, predict_y_model5)}")
+
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn import metrics
+import numpy as np
+
+# Model 6: K-Nearest Neighbors Regressor
+model6 = KNeighborsRegressor(n_neighbors=5)
+model6.fit(train_x, train_y)
+
+# Predictions for Model 6
+predict_y_model6 = model6.predict(train_x)
+
+# Evaluation Metrics for K-Nearest Neighbors Regressor
+print("Evaluation Metrics for Model 6 (K-Nearest Neighbors Regressor):\n")
+
+# R squared error
+score_model6_1 = metrics.r2_score(train_y, predict_y_model6)
+print(f"R squared error: {score_model6_1}")
+
+# Mean Absolute Error
+score_model6_2 = metrics.mean_absolute_error(train_y, predict_y_model6)
+print(f"Mean Absolute Error (MAE): {score_model6_2}")
+
+# Additional Metrics
+print(f"Mean Squared Error (MSE): {metrics.mean_squared_error(train_y, predict_y_model6)}")
+print(f"Root Mean Squared Error (RMSE): {np.sqrt(metrics.mean_squared_error(train_y, predict_y_model6))}")
+print(f"Mean Absolute Percentage Error (MAPE): {metrics.mean_absolute_percentage_error(train_y, predict_y_model6)}")
+print(f"Explained Variance Score (EVS): {metrics.explained_variance_score(train_y, predict_y_model6)}")
+
+# 13300000	7420	4	2	3	yes	no	no	no	yes	2	yes	furnished
+# 1750000	3850	3	1	2	yes	no	no	no	no	0	no	unfurnished
+
+
+input_data = (7420, 4, 2, 3, 1, 0, 0, 0, 1, 2, 1, 2)
+
+#changing input data as numpy array
+input_data_numpy = np.asarray(input_data)
+
+#reshaping the array because if we don't the model thinks we will provide 543 data but we are provided only 1 and so we need to reshape for one instance.
+input_data_numpy_reshape = input_data_numpy.reshape(1,-1)
+
+#standardise the input data
+std_data  = scalar.transform(input_data_numpy_reshape)
+
+
+
+prediction2 = model2.predict(std_data)
+print("Using Random Forest Regresor prediction is : ", prediction2)
+
+prediction3 = model3.predict(std_data)
+print("Using XGBoost prediction is : ", prediction3)
+# For Linear Regression (model4)
+prediction4 = model4.predict(std_data)
+print("Using Linear Regression prediction is: ", prediction4)
+
+# For Decision Tree Regressor (model5)
+prediction5 = model5.predict(std_data)
+print("Using Decision Tree Regressor prediction is: ", prediction5)
+
+# For K-Nearest Neighbors Regressor (model6)
+prediction6 = model6.predict(std_data)
+print("Using K-Nearest Neighbors Regressor prediction is: ", prediction6)
+
+
+
+import matplotlib.pyplot as plt
+
+# Model names
+models = ["Random Forest", "XGBoost", "Linear Regression", "Decision Tree", "KNN"]
+
+# Metrics for all models
+mae_scores = [
+    339096.9835626911,   # Random Forest
+    54630.20212155963,   # XGBoost
+    799720.1026620996,   # Linear Regression
+    7706.422018348624,   # Decision Tree
+    691418.8348623853    # KNN
+]
+r2_scores = [
+    0.9455469086918079, # Random Forest
+   0.9973854422569275,  # XGBoost
+    0.6809987305547798,  # Linear Regression
+    0.9987710396955115,  # Decision Tree
+    0.7428764076044969   # KNN
+]
+mse_scores = [
+    248883938266.2781,   # Random Forest
+    9527846046.564758,   # XGBoost
+    1162498690718.857,   # Linear Regression
+    4478555045.87156,    # Decision Tree
+    937005172526.5321    # KNN
+]
+
+rmse_scores = [
+    498882.68988438364,  # Random Forest
+    97610.68612895187,   # XGBoost
+    1078192.3254776287,  # Linear Regression
+    66922.00718651197,   # Decision Tree
+    967990.2750165067    # KNN
+]
+
+mape_scores = [
+    0.07485832931837239,  # Random Forest
+    0.014659538455132768, # XGBoost
+    0.17756869575148593,  # Linear Regression
+    0.002971382615299443, # Decision Tree
+    0.15074045019892232   # KNN
+]
+
+evs_scores = [
+    0.9317047966847205,  # Random Forest
+    0.9973854656686468,  # XGBoost
+    0.6809987305547798,  # Linear Regression
+    0.9987710396955115,  # Decision Tree
+    0.7437797197216879   # KNN
+]
+
+# Plotting all metrics as subplots
+fig, axes = plt.subplots(3, 2, figsize=(15, 12))
+fig.suptitle("Model Evaluation Metrics Comparison", fontsize=16)
+
+# Bar plot for each metric
+metrics = [
+    ("R-squared (Accuracy)", r2_scores),
+    ("Mean Absolute Error (MAE)", mae_scores),
+    ("Mean Squared Error (MSE)", mse_scores),
+    ("Root Mean Squared Error (RMSE)", rmse_scores),
+    ("Mean Absolute Percentage Error (MAPE)", mape_scores),
+    ("Explained Variance Score (EVS)", evs_scores)
+]
+
+colors = ['blue', 'green', 'orange', 'purple', 'red']
+
+for ax, (metric_name, values) in zip(axes.flatten(), metrics):
+    bars = ax.bar(models, values, color=colors)
+    ax.set_title(metric_name, fontsize=14)
+    ax.set_ylabel(metric_name, fontsize=12)
+    ax.set_xticks(range(len(models)))
+    ax.set_xticklabels(models, rotation=15, fontsize=10)
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    for bar in bars:
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), 
+                f"{bar.get_height():.3f}", ha='center', va='bottom', fontsize=9, color='black')
+
+# Adjust layout
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+plt.show()
+
+
